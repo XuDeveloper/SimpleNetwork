@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.xu.simplenetwork.request.MediaType;
 import com.xu.simplenetwork.request.PostBody;
 import com.xu.simplenetwork.request.Request;
 
 import static com.xu.simplenetwork.Utils.JSON;
 
 /**
- * Created by Administrator on 2016/10/8.
+ * Created by Xu on 2016/10/8.
  */
 
 public class MainActivity extends Activity {

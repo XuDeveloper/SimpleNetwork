@@ -3,7 +3,7 @@ package com.xu.simplenetwork.request;
 import com.xu.simplenetwork.Utils;
 
 /**
- * Created by Administrator on 2016/10/8.
+ * Created by Xu on 2016/10/8.
  */
 
 public final class PostBody {
