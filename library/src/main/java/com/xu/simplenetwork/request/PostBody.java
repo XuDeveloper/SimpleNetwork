@@ -25,6 +25,14 @@ public final class PostBody {
                 + '}';
     }
 
+    public MediaType type() {
+        return type;
+    }
+
+    public String content() {
+        return content;
+    }
+
     public static class Builder {
         private MediaType type;
         private String content;

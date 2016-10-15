@@ -1,5 +1,7 @@
 package com.xu.simplenetwork.request;
 
+import java.net.URL;
+
 /**
  * Created by Xu on 2016/10/8.
  */
@@ -9,6 +11,7 @@ public final class Request {
     private final String url;
     private final String method;
     private final PostBody body;
+    private final boolean isAsync;
 //    private final Headers headers;
 //    private final RequestBody body;
 //    private final Object tag;
@@ -17,6 +20,23 @@ public final class Request {
         this.url = builder.url;
         this.method = builder.method;
         this.body = builder.body;
+        this.isAsync = builder.isAsync;
+    }
+
+    public String url() {
+        return url;
+    }
+
+    public String method() {
+        return method;
+    }
+
+    public PostBody body() {
+        return body;
+    }
+
+    public boolean isAsync() {
+        return isAsync;
     }
 
     @Override
@@ -32,6 +52,7 @@ public final class Request {
         private String url;
         private String method;
         private PostBody body;
+        private boolean isAsync;
 
         public Builder() {
 
@@ -40,6 +61,11 @@ public final class Request {
         public Builder url(String url) {
             if (url == null) throw new NullPointerException("url == null");
             this.url = url;
+            return this;
+        }
+
+        public Builder isAsync(boolean isAsync) {
+            this.isAsync = isAsync;
             return this;
         }
 

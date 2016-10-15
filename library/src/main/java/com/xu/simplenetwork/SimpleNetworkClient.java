@@ -1,5 +1,8 @@
 package com.xu.simplenetwork;
 
+import com.xu.simplenetwork.call.AsyncCall;
+import com.xu.simplenetwork.call.NetworkCall;
+import com.xu.simplenetwork.call.SynCall;
 import com.xu.simplenetwork.request.Request;
 
 import java.net.HttpURLConnection;
@@ -27,8 +30,24 @@ public class SimpleNetworkClient {
         this.writeTimeout = builder.writeTimeout;
     }
 
+    public int connectTimeout() {
+        return connectTimeout;
+    }
+
+    public int readTimeout() {
+        return readTimeout;
+    }
+
+    public int writeTimeout() {
+        return writeTimeout;
+    }
+
     public NetworkCall newNetworkCall(Request request) {
-        return new NetworkCall(this, request);
+        if (request.isAsync()) {
+            return new AsyncCall(this, request);
+        } else {
+            return new SynCall(this, request);
+        }
     }
 
     public static class Builder {
