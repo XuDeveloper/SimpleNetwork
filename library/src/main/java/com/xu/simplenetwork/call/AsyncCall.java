@@ -2,12 +2,15 @@ package com.xu.simplenetwork.call;
 
 import com.xu.simplenetwork.SimpleNetworkClient;
 import com.xu.simplenetwork.request.Request;
+import com.xu.simplenetwork.response.Response;
 
 /**
- * Created by Administrator on 2016/10/15.
+ * Created by Xu on 2016/10/15.
  */
 
 public class AsyncCall extends NetworkCall {
+
+    private Response response;
 
     public AsyncCall(SimpleNetworkClient client, Request request) {
         setClient(client);
@@ -20,7 +23,7 @@ public class AsyncCall extends NetworkCall {
     }
 
     @Override
-    protected void getResponse() {
-
+    protected Response getResponse() {
+        return this.response;
     }
 }

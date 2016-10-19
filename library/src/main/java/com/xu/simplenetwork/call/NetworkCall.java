@@ -2,6 +2,7 @@ package com.xu.simplenetwork.call;
 
 import com.xu.simplenetwork.SimpleNetworkClient;
 import com.xu.simplenetwork.request.Request;
+import com.xu.simplenetwork.response.Response;
 
 import java.io.IOException;
 
@@ -35,18 +36,18 @@ public abstract class NetworkCall {
         this.request = request;
     }
 
-    public final void execute() {
+    public final Response execute() {
         try {
             connect();
         }catch (Exception e) {
             e.printStackTrace();
         }
-        getResponse();
+        return getResponse();
     }
 
     protected abstract void connect() throws IOException;
 
-    protected abstract void getResponse();
+    protected abstract Response getResponse();
 
 
 }
