@@ -1,16 +1,12 @@
 package com.xu.simplenetwork.call;
 
+import com.xu.simplenetwork.HttpContext;
 import com.xu.simplenetwork.SimpleNetworkClient;
+import com.xu.simplenetwork.Utils;
 import com.xu.simplenetwork.request.Request;
 import com.xu.simplenetwork.response.Response;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Xu on 2016/10/15.
@@ -20,6 +16,7 @@ public class SynCall extends NetworkCall {
 
     private Response response;
     private int code;
+    private String message;
 
     public SynCall(SimpleNetworkClient client, Request request) {
         setClient(client);
@@ -31,19 +28,13 @@ public class SynCall extends NetworkCall {
         try {
             SimpleNetworkClient client = getClient();
             Request request = getRequest();
-            HttpURLConnection connection = (HttpURLConnection) new URL(request.url()).openConnection();
-            connection.setReadTimeout(client.readTimeout());
-            connection.setConnectTimeout(client.connectTimeout());
-            connection.setRequestMethod(request.method());
-            connection.setDoInput(true);
-            code = connection.getResponseCode();
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                if (request.method().equals("get")) {
-                    InputStream is = connection.getInputStream();
-                    BufferedInputStream bis = new BufferedInputStream(is);
-
-                } else if (request.method().equals("post")) {
-
+            HttpContext context = new HttpContext(client, request);
+            if (context.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                if (context.isGet()) {
+                    message = Utils.getStringByInputStream(context.getInputStream());
+                } else if (context.isPost()) {
+                    context.setDefaultRequestProperty();
+                    message = Utils.getStringByInputStream(context.getInputStream());
                 }
             }
         } catch (Exception e) {
@@ -58,6 +49,7 @@ public class SynCall extends NetworkCall {
     protected Response getResponse() {
         response = new Response.Builder()
                 .code(code)
+                .message(message)
                 .build();
         return this.response;
     }

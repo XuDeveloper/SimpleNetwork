@@ -2,6 +2,13 @@ package com.xu.simplenetwork;
 
 import com.xu.simplenetwork.request.MediaType;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.Iterator;
 import java.util.List;
@@ -55,5 +62,52 @@ public class Utils {
         }
         return sbResponseHeader.toString();
     }
+
+    /**
+     * 读取数据并转换成String
+     * @param is
+     * @return
+     */
+    public static String getStringByInputStream(InputStream is) {
+        byte[] bytes = null;
+        BufferedInputStream bis = new BufferedInputStream(is);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedOutputStream bos = new BufferedOutputStream(baos);
+        byte[] buffer = new byte[1024 * 8];
+        int length;
+        try {
+            while ((length = bis.read(buffer)) > 0) {
+                bos.write(buffer, 0, length);
+            }
+            bos.flush();
+            bytes = baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            CloseUtils.closeQuietly(bis);
+            CloseUtils.closeQuietly(baos);
+            CloseUtils.closeQuietly(bos);
+        }
+        return getStringByBytes(bytes);
+    }
+
+    private static String getStringByBytes(byte[] bytes) {
+        String str = "";
+        try {
+            str = new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+    public static void writeContentByOutputStream(OutputStream outputStream, String content) throws IOException {
+        outputStream.write(content.getBytes("UTF-8"));
+        outputStream.flush();
+        CloseUtils.closeQuietly(outputStream);
+    }
+
+
+
 
 }

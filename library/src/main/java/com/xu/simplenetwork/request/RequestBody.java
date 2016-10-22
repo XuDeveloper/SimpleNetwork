@@ -6,19 +6,19 @@ import com.xu.simplenetwork.Utils;
  * Created by Xu on 2016/10/8.
  */
 
-public final class PostBody {
+public final class RequestBody {
 
     private final MediaType type;
     private final String content;
 
-    private PostBody(Builder builder) {
+    private RequestBody(Builder builder) {
         this.type = builder.type;
         this.content = builder.content;
     }
 
     @Override
     public String toString() {
-        return "PostBody{type="
+        return "RequestBody{type="
                 + type
                 + ", content="
                 + content
@@ -52,8 +52,8 @@ public final class PostBody {
             return this;
         }
 
-        public PostBody build() {
-            return new PostBody(this);
+        public RequestBody build() {
+            return new RequestBody(this);
         }
 
     }
