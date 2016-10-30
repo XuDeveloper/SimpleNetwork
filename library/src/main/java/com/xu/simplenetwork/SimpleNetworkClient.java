@@ -1,9 +1,6 @@
 package com.xu.simplenetwork;
 
-import com.xu.simplenetwork.call.AsyncCall;
-import com.xu.simplenetwork.call.NetworkCall;
-import com.xu.simplenetwork.call.SynCall;
-import com.xu.simplenetwork.request.Request;
+import com.xu.simplenetwork.executor.SimpleNetworkExecutor;
 
 import java.net.HttpURLConnection;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class SimpleNetworkClient {
 
     final HttpURLConnection connection;
+    final SimpleNetworkExecutor executor;
     final int connectTimeout;
     final int readTimeout;
     final int writeTimeout;
@@ -28,6 +26,11 @@ public class SimpleNetworkClient {
         this.connectTimeout = builder.connectTimeout;
         this.readTimeout = builder.readTimeout;
         this.writeTimeout = builder.writeTimeout;
+        this.executor = builder.executor;
+    }
+
+    public SimpleNetworkExecutor executor() {
+        return executor;
     }
 
     public int connectTimeout() {
@@ -42,16 +45,17 @@ public class SimpleNetworkClient {
         return writeTimeout;
     }
 
-    public NetworkCall newNetworkCall(Request request) {
-        if (request.isAsync()) {
-            return new AsyncCall(this, request);
-        } else {
-            return new SynCall(this, request);
-        }
-    }
+//    public NetworkCall newNetworkCall(Request request) {
+//        if (request.isAsync()) {
+//            return new AsyncCall(this, request);
+//        } else {
+//            return new SynCall(this, request);
+//        }
+//    }
 
     public static class Builder {
         private HttpURLConnection connection;
+        private SimpleNetworkExecutor executor;
         private int connectTimeout;
         private int readTimeout;
         private int writeTimeout;
@@ -95,6 +99,11 @@ public class SimpleNetworkClient {
             if (millis == 0 && timeout > 0)
                 throw new IllegalArgumentException("Timeout too small.");
             writeTimeout = (int) millis;
+            return this;
+        }
+
+        public Builder executor(SimpleNetworkExecutor networkExecutor) {
+            executor = networkExecutor;
             return this;
         }
     }

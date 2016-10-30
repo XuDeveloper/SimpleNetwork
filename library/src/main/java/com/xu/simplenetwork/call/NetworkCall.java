@@ -2,52 +2,19 @@ package com.xu.simplenetwork.call;
 
 import com.xu.simplenetwork.SimpleNetworkClient;
 import com.xu.simplenetwork.request.Request;
-import com.xu.simplenetwork.response.Response;
-
-import java.io.IOException;
 
 /**
- * Created by Xu on 2016/10/11.
+ * Created by Administrator on 2016/10/30.
  */
 
-public abstract class NetworkCall {
+// TODO: 2016/10/30  1.SynCall加入优先级；2.Executor搞定；3.实现INetWorkConnection（Client和UrlConnection）
+public class NetworkCall {
 
-//    public NetworkCall(SimpleNetworkClient client, Request request) {
-//        this.client = client;
-//        this.request = request;
-//    }
+    protected SimpleNetworkClient client;
+    protected Request request;
 
-    private SimpleNetworkClient client;
-    private Request request;
-
-    public SimpleNetworkClient getClient() {
-        return client;
+    public SimpleNetworkClient getDefaultClient() {
+        return new SimpleNetworkClient();
     }
-
-    public void setClient(SimpleNetworkClient client) {
-        this.client = client;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public void setRequest(Request request) {
-        this.request = request;
-    }
-
-    public final Response execute() {
-        try {
-            connect();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return getResponse();
-    }
-
-    protected abstract void connect() throws IOException;
-
-    protected abstract Response getResponse();
-
 
 }
