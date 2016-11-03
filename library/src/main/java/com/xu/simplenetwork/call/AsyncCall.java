@@ -9,47 +9,49 @@ import com.xu.simplenetwork.request.Request;
 
 public class AsyncCall extends NetworkCall {
 
-    public AsyncCall(SimpleNetworkClient client, Request request) {
+    private AsyncCallBack callBack;
+
+    public AsyncCall(SimpleNetworkClient client, Request request, AsyncCallBack asyncCallBack) {
+        this(request, asyncCallBack);
         this.client = client;
-        this.request = request;
     }
 
-    public AsyncCall(Request request) {
+    public AsyncCall(Request request, AsyncCallBack asyncCallBack) {
         this.client = getDefaultClient();
         this.request = request;
+        this.callBack = asyncCallBack;
+        this.time = System.currentTimeMillis();
     }
 
-    public void execute(AsyncCallBack asyncCallBack) {
-        client.executor().enqueue();
+    public void execute() {
+        client.executor().enqueue(this);
     }
 
-//    class NetworkRunnable implements Runnable {
-//
-//        private final AsyncCallBack callBack;
-//
-//        public NetworkRunnable(AsyncCallBack callBack) {
-//            this.callBack = callBack;
-//        }
-//
-//        @Override
-//        public void run() {
-//            try {
-//                SimpleNetworkClient client = getClient();
-//                Request request = getRequest();
-//                HttpContext context = new HttpContext(client, request);
-//                if (context.getResponseCode() == HttpURLConnection.HTTP_OK) {
-//                    if (context.isGet()) {
-//                        message = Utils.getStringByInputStream(context.getInputStream());
-//                    } else if (context.isPost()) {
-//                        context.setDefaultRequestProperty();
-//                        message = Utils.getStringByInputStream(context.getInputStream());
-//                    }
-//                }
-//            } catch (Exception e) {
-//
-//            } finally {
-//
-//            }
-//        }
-//    }
+    public AsyncCallBack getCallBack() {
+        return callBack;
+    }
+
+    public int getAsyncCallpriority() {
+        return this.request.priority();
+    }
+
+    public abstract class AsyncCallRunnable implements Runnable {
+
+        private final AsyncCall call;
+
+        public AsyncCallRunnable(AsyncCall asyncCall) {
+            this.call = asyncCall;
+        }
+
+        public AsyncCall getAsyncCall() {
+            return call;
+        }
+
+        @Override
+        public void run() {
+            execute();
+        }
+
+        public abstract void execute();
+    }
 }

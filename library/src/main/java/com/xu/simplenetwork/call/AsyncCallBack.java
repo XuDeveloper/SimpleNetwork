@@ -1,7 +1,7 @@
 package com.xu.simplenetwork.call;
 
 /**
- * Created by Administrator on 2016/10/30.
+ * Created by Xu on 2016/10/30.
  */
 
 public interface AsyncCallBack {

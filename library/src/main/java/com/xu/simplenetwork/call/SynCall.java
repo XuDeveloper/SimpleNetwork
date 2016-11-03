@@ -10,17 +10,22 @@ import com.xu.simplenetwork.request.Request;
 public class SynCall extends NetworkCall {
 
     public SynCall(SimpleNetworkClient client, Request request) {
+        this(request);
         this.client = client;
-        this.request = request;
     }
 
     public SynCall(Request request) {
         this.client = getDefaultClient();
         this.request = request;
+        this.time = System.currentTimeMillis();
     }
 
     public void execute() {
         client.executor().execute(this);
+    }
+
+    public int getSynCallpriority() {
+        return this.request.priority();
     }
 
 }

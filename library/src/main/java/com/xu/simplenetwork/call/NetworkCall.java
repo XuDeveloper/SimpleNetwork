@@ -4,17 +4,39 @@ import com.xu.simplenetwork.SimpleNetworkClient;
 import com.xu.simplenetwork.request.Request;
 
 /**
- * Created by Administrator on 2016/10/30.
+ * Created by Xu on 2016/10/30.
  */
 
-// TODO: 2016/10/30  1.SynCall加入优先级；2.Executor搞定；3.实现INetWorkConnection（Client和UrlConnection）
+
 public class NetworkCall {
 
     protected SimpleNetworkClient client;
     protected Request request;
+    protected long time;
 
     public SimpleNetworkClient getDefaultClient() {
         return new SimpleNetworkClient();
     }
 
+    public SimpleNetworkClient getClient() {
+        if (client != null) {
+            return client;
+        }
+        return getDefaultClient();
+    }
+
+    public Request getRequest() {
+        return request;
+    }
+
+    public long getCreateTime() {
+        return time;
+    }
+
+//    @Override
+//    public void run() {
+//        execute();
+//    }
+//
+//    protected abstract void execute();
 }

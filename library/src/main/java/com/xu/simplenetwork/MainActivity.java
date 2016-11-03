@@ -13,6 +13,7 @@ import static com.xu.simplenetwork.Utils.JSON;
  * Created by Xu on 2016/10/8.
  */
 
+// TODO: 2016/11/3  1.Executor逻辑；
 public class MainActivity extends Activity {
 
     @Override

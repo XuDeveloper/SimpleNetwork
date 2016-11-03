@@ -10,6 +10,7 @@ public final class Request {
     private final String method;
     private final RequestBody body;
     private final boolean isAsync;
+    private final int priority;
 //    private final Headers headers;
 //    private final RequestBody body;
 //    private final Object tag;
@@ -19,6 +20,7 @@ public final class Request {
         this.method = builder.method;
         this.body = builder.body;
         this.isAsync = builder.isAsync;
+        this.priority = builder.priority;
     }
 
     public String url() {
@@ -33,8 +35,8 @@ public final class Request {
         return body;
     }
 
-    public boolean isAsync() {
-        return isAsync;
+    public int priority() {
+        return priority;
     }
 
     @Override
@@ -51,6 +53,7 @@ public final class Request {
         private String method;
         private RequestBody body;
         private boolean isAsync;
+        private int priority;
 
         public Builder() {
 
@@ -64,6 +67,14 @@ public final class Request {
 
         public Builder isAsync(boolean isAsync) {
             this.isAsync = isAsync;
+            return this;
+        }
+
+        public Builder priority(int priority) {
+            if (priority > 1000 || priority < 0) {
+                throw new RuntimeException("priority out of range");
+            }
+            this.priority = priority;
             return this;
         }
 
