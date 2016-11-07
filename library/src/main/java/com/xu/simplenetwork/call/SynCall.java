@@ -1,6 +1,6 @@
 package com.xu.simplenetwork.call;
 
-import com.xu.simplenetwork.SimpleNetworkClient;
+import com.xu.simplenetwork.XNetworkClient;
 import com.xu.simplenetwork.request.Request;
 
 /**
@@ -9,7 +9,7 @@ import com.xu.simplenetwork.request.Request;
 
 public class SynCall extends NetworkCall {
 
-    public SynCall(SimpleNetworkClient client, Request request) {
+    public SynCall(XNetworkClient client, Request request) {
         this(request);
         this.client = client;
     }

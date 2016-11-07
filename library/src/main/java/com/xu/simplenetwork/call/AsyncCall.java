@@ -1,6 +1,6 @@
 package com.xu.simplenetwork.call;
 
-import com.xu.simplenetwork.SimpleNetworkClient;
+import com.xu.simplenetwork.XNetworkClient;
 import com.xu.simplenetwork.request.Request;
 
 /**
@@ -11,7 +11,7 @@ public class AsyncCall extends NetworkCall {
 
     private AsyncCallBack callBack;
 
-    public AsyncCall(SimpleNetworkClient client, Request request, AsyncCallBack asyncCallBack) {
+    public AsyncCall(XNetworkClient client, Request request, AsyncCallBack asyncCallBack) {
         this(request, asyncCallBack);
         this.client = client;
     }

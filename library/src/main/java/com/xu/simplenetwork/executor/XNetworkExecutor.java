@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Xu on 2016/10/30.
  */
 
-public class SimpleNetworkExecutor {
+public class XNetworkExecutor {
 
     private INetworkConnection connection;
     private ExecutorService synExecutorService;
@@ -27,7 +27,7 @@ public class SimpleNetworkExecutor {
 
     private BlockingQueue<Runnable> asyncCalls;
 
-    public SimpleNetworkExecutor(INetworkConnection connection) {
+    public XNetworkExecutor(INetworkConnection connection) {
         this.connection = connection;
         asyncCalls = new PriorityBlockingQueue<>(60, new AsyncCallComparator<>());
         synExecutorService = Executors.newSingleThreadExecutor();

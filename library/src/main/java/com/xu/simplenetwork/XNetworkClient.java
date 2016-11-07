@@ -1,6 +1,6 @@
 package com.xu.simplenetwork;
 
-import com.xu.simplenetwork.executor.SimpleNetworkExecutor;
+import com.xu.simplenetwork.executor.XNetworkExecutor;
 
 import java.net.HttpURLConnection;
 import java.util.concurrent.TimeUnit;
@@ -9,19 +9,19 @@ import java.util.concurrent.TimeUnit;
  * Created by Xu on 2016/10/11.
  */
 
-public class SimpleNetworkClient {
+public class XNetworkClient {
 
     final HttpURLConnection connection;
-    final SimpleNetworkExecutor executor;
+    final XNetworkExecutor executor;
     final int connectTimeout;
     final int readTimeout;
     final int writeTimeout;
 
-    public SimpleNetworkClient() {
+    public XNetworkClient() {
         this(new Builder());
     }
 
-    private SimpleNetworkClient(Builder builder) {
+    private XNetworkClient(Builder builder) {
         this.connection = builder.connection;
         this.connectTimeout = builder.connectTimeout;
         this.readTimeout = builder.readTimeout;
@@ -29,7 +29,7 @@ public class SimpleNetworkClient {
         this.executor = builder.executor;
     }
 
-    public SimpleNetworkExecutor executor() {
+    public XNetworkExecutor executor() {
         return executor;
     }
 
@@ -55,7 +55,7 @@ public class SimpleNetworkClient {
 
     public static class Builder {
         private HttpURLConnection connection;
-        private SimpleNetworkExecutor executor;
+        private XNetworkExecutor executor;
         private int connectTimeout;
         private int readTimeout;
         private int writeTimeout;
@@ -102,7 +102,7 @@ public class SimpleNetworkClient {
             return this;
         }
 
-        public Builder executor(SimpleNetworkExecutor networkExecutor) {
+        public Builder executor(XNetworkExecutor networkExecutor) {
             executor = networkExecutor;
             return this;
         }

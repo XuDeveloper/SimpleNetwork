@@ -14,11 +14,11 @@ import java.net.URL;
 
 public final class HttpContext {
 
-    private SimpleNetworkClient client;
+    private XNetworkClient client;
     private Request request;
     private HttpURLConnection connection;
 
-    public HttpContext(SimpleNetworkClient client, Request request) throws IOException {
+    public HttpContext(XNetworkClient client, Request request) throws IOException {
         this.client = client;
         this.request = request;
         connection = (HttpURLConnection) new URL(request.url()).openConnection();

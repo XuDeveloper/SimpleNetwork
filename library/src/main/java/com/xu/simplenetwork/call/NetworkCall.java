@@ -1,6 +1,6 @@
 package com.xu.simplenetwork.call;
 
-import com.xu.simplenetwork.SimpleNetworkClient;
+import com.xu.simplenetwork.XNetworkClient;
 import com.xu.simplenetwork.request.Request;
 
 /**
@@ -10,15 +10,15 @@ import com.xu.simplenetwork.request.Request;
 
 public class NetworkCall {
 
-    protected SimpleNetworkClient client;
+    protected XNetworkClient client;
     protected Request request;
     protected long time;
 
-    public SimpleNetworkClient getDefaultClient() {
-        return new SimpleNetworkClient();
+    public XNetworkClient getDefaultClient() {
+        return new XNetworkClient();
     }
 
-    public SimpleNetworkClient getClient() {
+    public XNetworkClient getClient() {
         if (client != null) {
             return client;
         }

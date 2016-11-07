@@ -1,6 +1,6 @@
 package com.xu.simplenetwork.executor;
 
-import com.xu.simplenetwork.SimpleNetworkClient;
+import com.xu.simplenetwork.XNetworkClient;
 import com.xu.simplenetwork.call.NetworkCall;
 import com.xu.simplenetwork.request.Request;
 import com.xu.simplenetwork.response.Response;
@@ -15,7 +15,7 @@ import java.net.URL;
 
 public class HttpUrlConn implements INetworkConnection {
 
-    private SimpleNetworkClient client;
+    private XNetworkClient client;
     private Request request;
     private HttpURLConnection connection;
 
@@ -35,7 +35,7 @@ public class HttpUrlConn implements INetworkConnection {
         return null;
     }
 
-    private void createUrlConnection(SimpleNetworkClient client, Request request) throws IOException {
+    private void createUrlConnection(XNetworkClient client, Request request) throws IOException {
         connection = (HttpURLConnection) new URL(request.url()).openConnection();
         connection.setReadTimeout(client.readTimeout());
         connection.setConnectTimeout(client.connectTimeout());

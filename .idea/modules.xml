@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SimpleNetwork.iml" filepath="$PROJECT_DIR$/SimpleNetwork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/XNetwork.iml" filepath="$PROJECT_DIR$/XNetwork.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
