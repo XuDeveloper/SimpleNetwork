@@ -39,6 +39,10 @@ public final class Request {
         return priority;
     }
 
+    public boolean isAsync() {
+        return isAsync;
+    }
+
     @Override
     public String toString() {
         return "Request{method="

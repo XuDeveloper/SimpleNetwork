@@ -1,8 +1,13 @@
 package com.xu.simplenetwork;
 
+import com.xu.simplenetwork.call.RealNetworkCall;
+import com.xu.simplenetwork.call.XNetworkCall;
+import com.xu.simplenetwork.executor.HttpUrlConn;
+import com.xu.simplenetwork.executor.XNetworkConnection;
 import com.xu.simplenetwork.executor.XNetworkExecutor;
+import com.xu.simplenetwork.executor.XNetworkQueue;
+import com.xu.simplenetwork.request.Request;
 
-import java.net.HttpURLConnection;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -11,11 +16,12 @@ import java.util.concurrent.TimeUnit;
 
 public class XNetworkClient {
 
-    final HttpURLConnection connection;
+    final XNetworkConnection connection;
     final XNetworkExecutor executor;
     final int connectTimeout;
     final int readTimeout;
     final int writeTimeout;
+    final XNetworkQueue queue;
 
     public XNetworkClient() {
         this(new Builder());
@@ -27,10 +33,19 @@ public class XNetworkClient {
         this.readTimeout = builder.readTimeout;
         this.writeTimeout = builder.writeTimeout;
         this.executor = builder.executor;
+        this.queue = new XNetworkQueue();
     }
 
     public XNetworkExecutor executor() {
         return executor;
+    }
+
+    public XNetworkQueue queue() {
+        return queue;
+    }
+
+    public XNetworkConnection connection() {
+        return connection;
     }
 
     public int connectTimeout() {
@@ -45,16 +60,12 @@ public class XNetworkClient {
         return writeTimeout;
     }
 
-//    public NetworkCall newNetworkCall(Request request) {
-//        if (request.isAsync()) {
-//            return new AsyncCall(this, request);
-//        } else {
-//            return new SynCall(this, request);
-//        }
-//    }
+    public XNetworkCall newNetworkCall(Request request) {
+        return new RealNetworkCall(this, request);
+    }
 
     public static class Builder {
-        private HttpURLConnection connection;
+        private XNetworkConnection connection;
         private XNetworkExecutor executor;
         private int connectTimeout;
         private int readTimeout;
@@ -64,6 +75,7 @@ public class XNetworkClient {
             connectTimeout = 10_000;
             readTimeout = 10_000;
             writeTimeout = 10_000;
+            connection = new HttpUrlConn();
         }
 
         public Builder connectTimeout(long timeout, TimeUnit unit) {

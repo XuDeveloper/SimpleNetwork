@@ -1,16 +1,11 @@
 package com.xu.simplenetwork.executor;
 
-import com.xu.simplenetwork.call.AsyncCall;
-import com.xu.simplenetwork.call.AsyncCallComparator;
-import com.xu.simplenetwork.call.SynCall;
+import com.xu.simplenetwork.XNetworkClient;
+import com.xu.simplenetwork.call.XNetworkCall;
 import com.xu.simplenetwork.response.Response;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Xu on 2016/10/30.
@@ -18,45 +13,38 @@ import java.util.concurrent.TimeUnit;
 
 public class XNetworkExecutor {
 
-    private INetworkConnection connection;
-    private ExecutorService synExecutorService;
-    private ExecutorService asyncExecutorService;
+    private XNetworkConnection connection;
+    private XNetworkClient client;
+    private ExecutorService executorService;
+    //    private ExecutorService asyncExecutorService;
     private Response response;
 
 //    private BlockingQueue<SynCall> synCalls;
 
-    private BlockingQueue<Runnable> asyncCalls;
+//    private BlockingQueue<Runnable> asyncCalls;
 
-    public XNetworkExecutor(INetworkConnection connection) {
-        this.connection = connection;
-        asyncCalls = new PriorityBlockingQueue<>(60, new AsyncCallComparator<>());
-        synExecutorService = Executors.newSingleThreadExecutor();
+    public XNetworkExecutor(XNetworkClient client) {
+        this.connection = client.connection();
+        this.client = client;
+//        asyncCalls = new PriorityBlockingQueue<>(60, new AsyncCallComparator<>());
+        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
         // custom ExecutorService
-        asyncExecutorService = new ThreadPoolExecutor(3, 3, 0L, TimeUnit.SECONDS, asyncCalls);
+//        asyncExecutorService = new ThreadPoolExecutor(3, 3, 0L, TimeUnit.SECONDS, asyncCalls);
     }
 
-    public Response execute(final SynCall synCall) {
-        synExecutorService.execute(new Runnable() {
+    public Response execute(final XNetworkCall XNetworkCall) {
+        executorService.submit(new Runnable() {
             @Override
             public void run() {
-                response = connection.performCall(synCall);
+                response = client.connection().performCall(XNetworkCall);
             }
         });
         return response;
     }
 
-    public void enqueue(AsyncCall asyncCall) {
-         asyncCalls.add(asyncCall.new AsyncCallRunnable(asyncCall) {
-             @Override
-             public void execute() {
+//    public void enqueue() throws InterruptedException {
+//        AsyncCallRunnable runnable = (AsyncCallRunnable) client.queue().takeAsyncCall();
+//        asyncExecutorService.submit(runnable);
+//    }
 
-             }
-         });
-    }
-
-    public void run() {
-//        for (Runnable runnable: asyncCalls) {
-//            asyncExecutorService.execute(runnable);
-//        }
-    }
 }
