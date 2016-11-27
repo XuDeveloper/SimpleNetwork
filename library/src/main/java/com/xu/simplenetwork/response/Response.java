@@ -1,36 +1,55 @@
 package com.xu.simplenetwork.response;
 
+import com.xu.simplenetwork.request.Header;
+
 /**
  * Created by Xu on 2016/10/19.
  */
 
 public final class Response {
 
-    private final String message;
+    private final String HTTPstatus;
     private final int code;
+    private final Header headers;
     private final ResponseBody body;
     private final long receivedResponseAtMillis;
 
     private Response(Builder builder) {
-        this.message = builder.message;
+        this.HTTPstatus = builder.HTTPstatus;
         this.code = builder.code;
+        this.headers = builder.headers.build();
         this.body = builder.body;
         this.receivedResponseAtMillis = builder.receivedResponseAtMillis;
     }
 
     public static class Builder {
-        private String message;
+        private String HTTPstatus;
         private int code;
+        private Header.Builder headers;
         private ResponseBody body;
         private long receivedResponseAtMillis;
 
-        public Builder message(String message) {
-            this.message = message;
+        public Builder() {
+            headers = new Header.Builder();
+        }
+
+        public Builder message(String HTTPstatus) {
+            this.HTTPstatus = HTTPstatus;
             return this;
         }
 
         public Builder code(int code) {
             this.code = code;
+            return this;
+        }
+
+        public Builder addHeader(String name, String value) {
+            headers.add(name, value);
+            return this;
+        }
+
+        public Builder removeHeader(String name) {
+            headers.removeAll(name);
             return this;
         }
 
@@ -47,7 +66,6 @@ public final class Response {
         public Response build() {
             return new Response(this);
         }
-
 
     }
 

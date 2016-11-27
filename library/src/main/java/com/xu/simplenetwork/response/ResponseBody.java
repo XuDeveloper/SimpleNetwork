@@ -7,11 +7,11 @@ package com.xu.simplenetwork.response;
 public final class ResponseBody {
 
     private final byte[] bytes;
-    private final int contentLength;
+//    private final int contentLength;
 
     private ResponseBody(Builder builder) {
         this.bytes = builder.bytes;
-        this.contentLength = builder.contentLength;
+//        this.contentLength = builder.contentLength;
     }
 
     public static class Builder {
@@ -22,11 +22,11 @@ public final class ResponseBody {
             this.bytes = bytes;
             return this;
         }
-
-        public Builder contentLength(int contentLength) {
-            this.contentLength = contentLength;
-            return this;
-        }
+//
+//        public Builder contentLength(int contentLength) {
+//            this.contentLength = contentLength;
+//            return this;
+//        }
 
         public ResponseBody build() {
             return new ResponseBody(this);

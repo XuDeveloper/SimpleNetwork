@@ -2,6 +2,7 @@ package com.xu.simplenetwork.executor;
 
 import com.xu.simplenetwork.XNetworkClient;
 import com.xu.simplenetwork.call.XNetworkCall;
+import com.xu.simplenetwork.connection.XNetworkConnection;
 import com.xu.simplenetwork.response.Response;
 
 import java.util.concurrent.ExecutorService;

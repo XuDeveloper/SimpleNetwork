@@ -33,6 +33,10 @@ public final class RequestBody {
         return content;
     }
 
+    public byte[] bytes() {
+        return content.getBytes(type.charset());
+    }
+
     public static class Builder {
         private MediaType type;
         private String content;

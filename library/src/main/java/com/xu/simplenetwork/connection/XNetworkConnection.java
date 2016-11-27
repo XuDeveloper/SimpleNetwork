@@ -1,4 +1,4 @@
-package com.xu.simplenetwork.executor;
+package com.xu.simplenetwork.connection;
 
 import com.xu.simplenetwork.call.XNetworkCall;
 import com.xu.simplenetwork.response.Response;

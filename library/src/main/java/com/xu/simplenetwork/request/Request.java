@@ -8,6 +8,7 @@ public final class Request {
 
     private final String url;
     private final String method;
+    private final Header header;
     private final RequestBody body;
     private final boolean isAsync;
     private final int priority;
@@ -18,6 +19,7 @@ public final class Request {
     private Request(Builder builder) {
         this.url = builder.url;
         this.method = builder.method;
+        this.header = builder.headers.build();
         this.body = builder.body;
         this.isAsync = builder.isAsync;
         this.priority = builder.priority;
@@ -29,6 +31,10 @@ public final class Request {
 
     public String method() {
         return method;
+    }
+
+    public Header header() {
+        return header;
     }
 
     public RequestBody body() {
@@ -55,12 +61,13 @@ public final class Request {
     public static class Builder {
         private String url;
         private String method;
+        private Header.Builder headers;
         private RequestBody body;
         private boolean isAsync;
         private int priority;
 
         public Builder() {
-
+            this.headers = new Header.Builder();
         }
 
         public Builder url(String url) {
@@ -79,6 +86,16 @@ public final class Request {
                 throw new RuntimeException("priority out of range");
             }
             this.priority = priority;
+            return this;
+        }
+
+        public Builder addHeader(String name, String value) {
+            headers.add(name, value);
+            return this;
+        }
+
+        public Builder removeHeader(String name) {
+            headers.removeAll(name);
             return this;
         }
 

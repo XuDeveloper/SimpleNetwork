@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -128,6 +129,10 @@ public class Utils {
         }
         data = null;
         return outStream.toByteArray();
+    }
+
+    public static String format(String format, Object... args) {
+        return String.format(Locale.US, format, args);
     }
 
 }

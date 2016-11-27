@@ -2,8 +2,8 @@ package com.xu.simplenetwork;
 
 import com.xu.simplenetwork.call.RealNetworkCall;
 import com.xu.simplenetwork.call.XNetworkCall;
-import com.xu.simplenetwork.executor.HttpUrlConn;
-import com.xu.simplenetwork.executor.XNetworkConnection;
+import com.xu.simplenetwork.connection.HttpUrlConn;
+import com.xu.simplenetwork.connection.XNetworkConnection;
 import com.xu.simplenetwork.executor.XNetworkExecutor;
 import com.xu.simplenetwork.executor.XNetworkQueue;
 import com.xu.simplenetwork.request.Request;
@@ -60,8 +60,9 @@ public class XNetworkClient {
         return writeTimeout;
     }
 
-    public XNetworkCall newNetworkCall(Request request) {
-        return new RealNetworkCall(this, request);
+    public static XNetworkCall newNetworkCall(Request request) {
+        XNetworkClient client = new XNetworkClient();
+        return new RealNetworkCall(client, request);
     }
 
     public static class Builder {
