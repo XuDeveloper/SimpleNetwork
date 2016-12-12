@@ -1,6 +1,6 @@
 package com.xu.simplenetwork.request;
 
-import com.xu.simplenetwork.Utils;
+import com.xu.simplenetwork.util.HttpUtils;
 
 /**
  * Created by Xu on 2016/10/8.
@@ -42,7 +42,7 @@ public final class RequestBody {
         private String content;
 
         public Builder() {
-            type = Utils.JSON;
+            type = HttpUtils.JSON;
         }
 
         public Builder type(MediaType type) {

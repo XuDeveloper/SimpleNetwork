@@ -1,6 +1,7 @@
 package com.xu.simplenetwork;
 
 import com.xu.simplenetwork.request.Request;
+import com.xu.simplenetwork.util.HttpUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +53,7 @@ public final class HttpContext {
     public void setDefaultRequestProperty() throws IOException {
         connection.setRequestProperty("Content-Type", request.body().type().toString());
         connection.setRequestProperty("Content-Length", String.valueOf(request.body().content().length()));
-        Utils.writeContentByOutputStream(connection.getOutputStream(), request.body().content());
+        HttpUtils.writeContentByOutputStream(connection.getOutputStream(), request.body().content());
     }
 
     public boolean isGet() {

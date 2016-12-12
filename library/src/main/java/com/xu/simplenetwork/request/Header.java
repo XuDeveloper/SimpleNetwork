@@ -1,6 +1,6 @@
 package com.xu.simplenetwork.request;
 
-import com.xu.simplenetwork.Utils;
+import com.xu.simplenetwork.util.HttpUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -243,7 +243,7 @@ public final class Header {
             for (int i = 0, length = name.length(); i < length; i++) {
                 char c = name.charAt(i);
                 if (c <= '\u001f' || c >= '\u007f') {
-                    throw new IllegalArgumentException(Utils.format(
+                    throw new IllegalArgumentException(HttpUtils.format(
                             "Unexpected char %#04x at %d in header name: %s", (int) c, i, name));
                 }
             }
@@ -251,7 +251,7 @@ public final class Header {
             for (int i = 0, length = value.length(); i < length; i++) {
                 char c = value.charAt(i);
                 if ((c <= '\u001f' && c != '\u0009' /* htab */) || c >= '\u007f') {
-                    throw new IllegalArgumentException(Utils.format(
+                    throw new IllegalArgumentException(HttpUtils.format(
                             "Unexpected char %#04x at %d in %s value: %s", (int) c, i, name, value));
                 }
             }

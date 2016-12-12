@@ -25,6 +25,10 @@ public final class Request {
         this.priority = builder.priority;
     }
 
+    public Builder newBuilder() {
+        return new Builder(this);
+    }
+
     public String url() {
         return url;
     }
@@ -70,6 +74,15 @@ public final class Request {
             this.headers = new Header.Builder();
         }
 
+        private Builder(Request request) {
+            this.url = request.url;
+            this.method = request.method;
+            this.headers = request.header.newBuilder();
+            this.body = request.body;
+//            this.tag = request.tag;
+            this.priority = request.priority;
+        }
+
         public Builder url(String url) {
             if (url == null) throw new NullPointerException("url == null");
             this.url = url;
@@ -96,6 +109,12 @@ public final class Request {
 
         public Builder removeHeader(String name) {
             headers.removeAll(name);
+            return this;
+        }
+
+        public Builder method(String method) {
+            if (method == null) throw new NullPointerException("method == null");
+            this.method = method;
             return this;
         }
 

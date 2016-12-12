@@ -1,7 +1,7 @@
 package com.xu.simplenetwork.connection;
 
-import com.xu.simplenetwork.CloseUtils;
-import com.xu.simplenetwork.Utils;
+import com.xu.simplenetwork.util.CloseUtils;
+import com.xu.simplenetwork.util.HttpUtils;
 import com.xu.simplenetwork.XNetworkClient;
 import com.xu.simplenetwork.call.XNetworkCall;
 import com.xu.simplenetwork.request.Request;
@@ -92,14 +92,15 @@ public class HttpUrlConn implements XNetworkConnection {
         try {
             inputStream = connection.getInputStream();
             outputStream = connection.getOutputStream();
-            byte[] bytes = Utils.InputStreamTOByte(inputStream);
+            byte[] bytes = HttpUtils.InputStreamTOByte(inputStream);
             String HTTPStatus = connection.getResponseMessage();
             int responseCode = connection.getResponseCode();
             if (responseCode == -1) {
                 throw new IOException("Could not retrieve response code from HttpUrlConnection.");
             }
             ResponseBody responseBody = new ResponseBody.Builder().bytes(bytes).build();
-            Response response = new Response.Builder()
+            Response.Builder builder = HttpUtils.readResponseHeader(connection);
+            Response response = builder
                     .message(HTTPStatus)
                     .receivedResponseAtMillis(System.currentTimeMillis())
                     .responseBody(responseBody)
@@ -115,9 +116,9 @@ public class HttpUrlConn implements XNetworkConnection {
                 case 303:
                 case 307:
                 case 308:
-                    return HandleResponseFactory.getHandleResponse("redirect").handleResponse(response);
+                    return handleRedirect(response);
                 default:
-                    return HandleResponseFactory.getHandleResponse("default").handleResponse(response);
+                    return response;
             }
         } catch (IOException e) {
 
@@ -129,6 +130,19 @@ public class HttpUrlConn implements XNetworkConnection {
 
     }
 
-
+    private Response handleRedirect(Response original) throws IOException {
+        String nextUrl = original.header("Location");
+        Request.Builder newRequestBuilder = request.newBuilder();
+        Request newRequest = null;
+        if (request.method() == "post") {
+            newRequest = newRequestBuilder.url(nextUrl).buildPostRequest(request.body());
+        } else if (request.method() == "get") {
+            newRequest = newRequestBuilder.url(nextUrl).buildGetRequest();
+        }
+        connection = createUrlConnection(client, newRequest);
+        setRequestHeaders(connection, request);
+        setRequestParams(connection, request);
+        return fetchResponse(connection);
+    }
 
 }

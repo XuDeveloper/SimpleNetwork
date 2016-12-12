@@ -6,13 +6,13 @@ import android.os.Bundle;
 import com.xu.simplenetwork.request.Request;
 import com.xu.simplenetwork.request.RequestBody;
 
-import static com.xu.simplenetwork.Utils.JSON;
+import static com.xu.simplenetwork.util.HttpUtils.JSON;
 
 /**
  * Created by Xu on 2016/10/8.
  */
 
-// TODO: 2016/11/19  1.requestbody的构建，content-type以及MediaType使用;2.处理重定向以及其他handleResponse
+// TODO: 2016/11/19  1.requestbody的构建，content-type以及MediaType使用;
 public class MainActivity extends Activity {
 
     @Override

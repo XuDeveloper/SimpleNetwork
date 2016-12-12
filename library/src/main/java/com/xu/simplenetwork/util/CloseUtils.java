@@ -1,4 +1,4 @@
-package com.xu.simplenetwork;
+package com.xu.simplenetwork.util;
 
 import java.io.Closeable;
 import java.io.IOException;

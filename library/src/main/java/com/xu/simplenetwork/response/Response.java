@@ -22,6 +22,19 @@ public final class Response {
         this.receivedResponseAtMillis = builder.receivedResponseAtMillis;
     }
 
+    public String header(String name) {
+        return header(name, null);
+    }
+
+    public String header(String name, String defaultValue) {
+        String result = headers.get(name);
+        return result != null ? result : defaultValue;
+    }
+
+    public Header headers() {
+        return headers;
+    }
+
     public static class Builder {
         private String HTTPstatus;
         private int code;
