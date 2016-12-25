@@ -66,7 +66,9 @@ public class HttpUtils {
 //            sbResponseHeader.append(":");
 //            sbResponseHeader.append(responseHeaderValue);
 //            sbResponseHeader.append("\n");
-            builder.addHeader(responseHeaderKey, responseHeaderValue);
+            if (responseHeaderKey != null && responseHeaderValue != null) {
+                builder.addHeader(responseHeaderKey, responseHeaderValue);
+            }
         }
         return builder;
 //        return sbResponseHeader.toString();

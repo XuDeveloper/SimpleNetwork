@@ -43,7 +43,9 @@ public final class Header {
         return namesAndValues[index * 2 + 1];
     }
 
-    /** Returns an immutable case-insensitive set of header names. */
+    /**
+     * Returns an immutable case-insensitive set of header names.
+     */
     public Set<String> names() {
         TreeSet<String> result = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         for (int i = 0, size = size(); i < size; i++) {
@@ -52,7 +54,9 @@ public final class Header {
         return Collections.unmodifiableSet(result);
     }
 
-    /** Returns an immutable list of the header values for {@code name}. */
+    /**
+     * Returns an immutable list of the header values for {@code name}.
+     */
     public List<String> values(String name) {
         List<String> result = null;
         for (int i = 0, size = size(); i < size; i++) {
@@ -77,37 +81,40 @@ public final class Header {
      * casing, in the same order. Note that two headers instances may be <i>semantically</i> equal
      * but not equal according to this method. In particular, none of the following sets of headers
      * are equal according to this method: <pre>   {@code
-     *
+     * <p>
      *   1. Original
      *   Content-Type: text/html
      *   Content-Length: 50
-     *
+     * <p>
      *   2. Different order
      *   Content-Length: 50
      *   Content-Type: text/html
-     *
+     * <p>
      *   3. Different case
      *   content-type: text/html
      *   content-length: 50
-     *
+     * <p>
      *   4. Different values
      *   Content-Type: text/html
      *   Content-Length: 050
      * }</pre>
-     *
+     * <p>
      * Applications that require semantically equal headers should convert them into a canonical form
      * before comparing them for equality.
      */
-    @Override public boolean equals(Object other) {
+    @Override
+    public boolean equals(Object other) {
         return other instanceof Header
                 && Arrays.equals(((Header) other).namesAndValues, namesAndValues);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return Arrays.hashCode(namesAndValues);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         StringBuilder result = new StringBuilder();
         for (int i = 0, size = size(); i < size; i++) {
             result.append(name(i)).append(": ").append(value(i)).append("\n");
@@ -151,7 +158,8 @@ public final class Header {
         // Make a defensive copy and clean it up.
         namesAndValues = namesAndValues.clone();
         for (int i = 0; i < namesAndValues.length; i++) {
-            if (namesAndValues[i] == null) throw new IllegalArgumentException("Header cannot be null");
+            if (namesAndValues[i] == null)
+                throw new IllegalArgumentException("Header cannot be null");
             namesAndValues[i] = namesAndValues[i].trim();
         }
 

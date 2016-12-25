@@ -6,7 +6,7 @@ import com.xu.xnetwork.response.Response;
  * Created by Xu on 2016/10/30.
  */
 
-public interface AsyncCallBack {
+public interface XNetworkCallBack {
 
     void onSuccess(Response response);
 

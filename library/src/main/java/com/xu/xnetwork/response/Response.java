@@ -1,5 +1,9 @@
 package com.xu.xnetwork.response;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.google.gson.Gson;
 import com.xu.xnetwork.request.Header;
 
 /**
@@ -33,6 +37,25 @@ public final class Response {
 
     public Header headers() {
         return headers;
+    }
+
+    public <T> T json(Class<T> className) {
+        Gson gson = new Gson();
+        return gson.fromJson(string(), className);
+    }
+
+    public String string() {
+        if (body.bytes() == null) {
+            throw new RuntimeException("response is null!");
+        }
+        return new String(body.bytes());
+    }
+
+    public Bitmap bitmap() {
+        if (body.bytes() == null) {
+            throw new RuntimeException("response is null!");
+        }
+        return BitmapFactory.decodeByteArray(body.bytes(), 0, body.bytes().length);
     }
 
     public static class Builder {

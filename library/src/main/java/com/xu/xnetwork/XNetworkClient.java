@@ -1,124 +1,67 @@
 package com.xu.xnetwork;
 
-import com.xu.xnetwork.call.RealNetworkCall;
-import com.xu.xnetwork.call.XNetworkCall;
-import com.xu.xnetwork.connection.HttpUrlConn;
-import com.xu.xnetwork.connection.XNetworkConnection;
-import com.xu.xnetwork.executor.XNetworkExecutor;
-import com.xu.xnetwork.executor.XNetworkQueue;
-import com.xu.xnetwork.request.Request;
+import android.app.Activity;
 
-import java.util.concurrent.TimeUnit;
+import com.xu.xnetwork.call.XNetworkCall;
+import com.xu.xnetwork.call.XNetworkCallBack;
+import com.xu.xnetwork.config.XNetworkConfig;
+import com.xu.xnetwork.executor.XNetworkExecutor;
+import com.xu.xnetwork.request.Request;
+import com.xu.xnetwork.request.XRequestManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by Xu on 2016/10/11.
+ * Created by Xu on 2016/12/24.
  */
 
 public class XNetworkClient {
 
-    final XNetworkConnection connection;
-    final XNetworkExecutor executor;
-    final int connectTimeout;
-    final int readTimeout;
-    final int writeTimeout;
-    final XNetworkQueue queue;
+    private static final String TAG = "XNetworkClient";
 
-    public XNetworkClient() {
-        this(new Builder());
+    private static XNetworkConfig mConfig;
+    private static Map<Activity, XRequestManager> managerMap;
+    private static XNetworkExecutor executor;
+
+    public XNetworkClient(XNetworkConfig config) {
+        this.mConfig = config;
+        managerMap = new HashMap<>();
+        executor = new XNetworkExecutor();
     }
 
-    private XNetworkClient(Builder builder) {
-        this.connection = builder.connection;
-        this.connectTimeout = builder.connectTimeout;
-        this.readTimeout = builder.readTimeout;
-        this.writeTimeout = builder.writeTimeout;
-        this.executor = builder.executor;
-        this.queue = new XNetworkQueue();
+//    public static Response newRequest(Activity activity, Request request) {
+//        XRequestManager manager = checkRequestManager(activity, true);
+//        manager.addSynRequest(request);
+//        XSynNetworkCall call = new XSynNetworkCall(request, mConfig);
+//        executor.executeSyn(call);
+//        return call.getResponse();
+//    }
+
+    public static void newRequest(Activity activity, Request request, XNetworkCallBack callBack) {
+        if (callBack == null) throw new NullPointerException("callback is null!");
+        XRequestManager manager = checkRequestManager(activity, true);
+        XNetworkCall call = manager.createNetworkCall(request, mConfig, callBack);
+        executor.executeAsync(call);
     }
 
-    public XNetworkExecutor executor() {
-        return executor;
-    }
-
-    public XNetworkQueue queue() {
-        return queue;
-    }
-
-    public XNetworkConnection connection() {
-        return connection;
-    }
-
-    public int connectTimeout() {
-        return connectTimeout;
-    }
-
-    public int readTimeout() {
-        return readTimeout;
-    }
-
-    public int writeTimeout() {
-        return writeTimeout;
-    }
-
-    public static XNetworkCall newNetworkCall(Request request) {
-        XNetworkClient client = new XNetworkClient();
-        return new RealNetworkCall(client, request);
-    }
-
-    public static class Builder {
-        private XNetworkConnection connection;
-        private XNetworkExecutor executor;
-        private int connectTimeout;
-        private int readTimeout;
-        private int writeTimeout;
-
-        public Builder() {
-            connectTimeout = 10_000;
-            readTimeout = 10_000;
-            writeTimeout = 10_000;
-            connection = new HttpUrlConn();
+    /**
+     * 访问activity对应的RequestManager对象
+     *
+     * @param activity
+     * @param createNew 当RequestManager对象为null时是否创建新的RequestManager对象
+     * @return
+     */
+    private static XRequestManager checkRequestManager(Activity activity, boolean createNew) {
+        XRequestManager manager;
+        if ((manager = managerMap.get(activity)) == null) {
+            if (createNew) {
+                manager = new XRequestManager();
+                managerMap.put(activity, manager);
+            } else {
+                throw new NullPointerException(activity.getClass().getSimpleName() + "'s RequestManager is null!");
+            }
         }
-
-        public Builder connectTimeout(long timeout, TimeUnit unit) {
-            if (timeout < 0) throw new IllegalArgumentException("timeout < 0");
-            if (unit == null) throw new NullPointerException("unit == null");
-            long millis = unit.toMillis(timeout);
-            if (millis > Integer.MAX_VALUE)
-                throw new IllegalArgumentException("Timeout too large.");
-            if (millis == 0 && timeout > 0)
-                throw new IllegalArgumentException("Timeout too small.");
-            connectTimeout = (int) millis;
-            return this;
-        }
-
-        public Builder readTimeout(long timeout, TimeUnit unit) {
-            if (timeout < 0) throw new IllegalArgumentException("timeout < 0");
-            if (unit == null) throw new NullPointerException("unit == null");
-            long millis = unit.toMillis(timeout);
-            if (millis > Integer.MAX_VALUE)
-                throw new IllegalArgumentException("Timeout too large.");
-            if (millis == 0 && timeout > 0)
-                throw new IllegalArgumentException("Timeout too small.");
-            readTimeout = (int) millis;
-            return this;
-        }
-
-        public Builder writeTimeout(long timeout, TimeUnit unit) {
-            if (timeout < 0) throw new IllegalArgumentException("timeout < 0");
-            if (unit == null) throw new NullPointerException("unit == null");
-            long millis = unit.toMillis(timeout);
-            if (millis > Integer.MAX_VALUE)
-                throw new IllegalArgumentException("Timeout too large.");
-            if (millis == 0 && timeout > 0)
-                throw new IllegalArgumentException("Timeout too small.");
-            writeTimeout = (int) millis;
-            return this;
-        }
-
-        public Builder executor(XNetworkExecutor networkExecutor) {
-            executor = networkExecutor;
-            return this;
-        }
+        return manager;
     }
-
 }

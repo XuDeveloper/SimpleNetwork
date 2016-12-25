@@ -89,18 +89,18 @@ public final class Request {
             return this;
         }
 
-        public Builder isAsync(boolean isAsync) {
-            this.isAsync = isAsync;
-            return this;
-        }
-
-        public Builder priority(int priority) {
-            if (priority > 1000 || priority < 0) {
-                throw new RuntimeException("priority out of range");
-            }
-            this.priority = priority;
-            return this;
-        }
+//        public Builder isAsync(boolean isAsync) {
+//            this.isAsync = isAsync;
+//            return this;
+//        }
+//
+//        public Builder priority(int priority) {
+//            if (priority > 1000 || priority < 0) {
+//                throw new RuntimeException("priority out of range");
+//            }
+//            this.priority = priority;
+//            return this;
+//        }
 
         public Builder addHeader(String name, String value) {
             headers.add(name, value);
@@ -119,13 +119,13 @@ public final class Request {
         }
 
         public Request buildPostRequest(RequestBody body) {
-            this.method = "post";
+            this.method = "POST";
             this.body = body;
             return new Request(this);
         }
 
         public Request buildGetRequest() {
-            this.method = "get";
+            this.method = "GET";
             return new Request(this);
         }
     }

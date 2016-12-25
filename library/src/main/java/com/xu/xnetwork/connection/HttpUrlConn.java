@@ -1,12 +1,13 @@
 package com.xu.xnetwork.connection;
 
-import com.xu.xnetwork.util.CloseUtils;
-import com.xu.xnetwork.util.HttpUtils;
-import com.xu.xnetwork.XNetworkClient;
 import com.xu.xnetwork.call.XNetworkCall;
+import com.xu.xnetwork.config.XNetworkConfig;
 import com.xu.xnetwork.request.Request;
+import com.xu.xnetwork.request.RequestBody;
 import com.xu.xnetwork.response.Response;
 import com.xu.xnetwork.response.ResponseBody;
+import com.xu.xnetwork.util.CloseUtils;
+import com.xu.xnetwork.util.HttpUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,20 +23,20 @@ import java.util.Set;
 
 public class HttpUrlConn implements XNetworkConnection {
 
-    private XNetworkClient client;
     private Request request;
-    private HttpURLConnection connection;
+    private XNetworkConfig config;
 
     @Override
     public Response performCall(XNetworkCall call) {
         HttpURLConnection connection = null;
-        client = call.getClient();
+        Response response = null;
+        config = call.getConfig();
         request = call.getRequest();
         try {
-            connection = createUrlConnection(client, request);
+            connection = createUrlConnection(config, request);
             setRequestHeaders(connection, request);
             setRequestParams(connection, request);
-            return fetchResponse(connection);
+            response = fetchResponse(connection);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -43,16 +44,14 @@ public class HttpUrlConn implements XNetworkConnection {
                 connection.disconnect();
             }
         }
-        return null;
+        return response;
     }
 
-    private HttpURLConnection createUrlConnection(XNetworkClient client, Request request) throws IOException {
-        connection = (HttpURLConnection) new URL(request.url()).openConnection();
-        connection.setReadTimeout(client.readTimeout());
-        connection.setConnectTimeout(client.connectTimeout());
+    private HttpURLConnection createUrlConnection(XNetworkConfig config, Request request) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(request.url()).openConnection();
+        connection.setReadTimeout(config.readTimeout());
+        connection.setConnectTimeout(config.connectTimeout());
         connection.setRequestMethod(request.method());
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
         return connection;
     }
 
@@ -71,8 +70,8 @@ public class HttpUrlConn implements XNetworkConnection {
             throws IOException {
         String method = request.method();
         connection.setRequestMethod(method);
-//         add params
-        byte[] body = request.body().bytes();
+        // add params
+        RequestBody body = request.body();
         if (body != null) {
             // enable output
             connection.setDoOutput(true);
@@ -81,7 +80,7 @@ public class HttpUrlConn implements XNetworkConnection {
                     .addRequestProperty("Content-Type", request.body().type().toString());
 //             write params data to connection
             DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
-            dataOutputStream.write(body);
+            dataOutputStream.write(body.bytes());
             dataOutputStream.close();
         }
     }
@@ -89,18 +88,25 @@ public class HttpUrlConn implements XNetworkConnection {
     private Response fetchResponse(HttpURLConnection connection) {
         InputStream inputStream = null;
         OutputStream outputStream = null;
+        Response response = null;
         try {
             inputStream = connection.getInputStream();
-            outputStream = connection.getOutputStream();
+            if (request.method() == "POST") {
+                outputStream = connection.getOutputStream();
+            }
             byte[] bytes = HttpUtils.InputStreamTOByte(inputStream);
             String HTTPStatus = connection.getResponseMessage();
             int responseCode = connection.getResponseCode();
             if (responseCode == -1) {
                 throw new IOException("Could not retrieve response code from HttpUrlConnection.");
             }
-            ResponseBody responseBody = new ResponseBody.Builder().bytes(bytes).build();
+            int contentLength = bytes.length;
+            ResponseBody responseBody = new ResponseBody.Builder()
+                    .bytes(bytes)
+                    .contentLength(contentLength)
+                    .build();
             Response.Builder builder = HttpUtils.readResponseHeader(connection);
-            Response response = builder
+            response = builder
                     .message(HTTPStatus)
                     .receivedResponseAtMillis(System.currentTimeMillis())
                     .responseBody(responseBody)
@@ -121,12 +127,22 @@ public class HttpUrlConn implements XNetworkConnection {
                     return response;
             }
         } catch (IOException e) {
-
+            Response.Builder builder = HttpUtils.readResponseHeader(connection);
+            ResponseBody responseBody = new ResponseBody.Builder()
+                    .bytes(null)
+                    .contentLength(0)
+                    .build();
+            response = builder
+                    .message(e.getMessage())
+                    .receivedResponseAtMillis(System.currentTimeMillis())
+                    .responseBody(responseBody)
+                    .code(0)
+                    .build();
         } finally {
             CloseUtils.closeQuietly(inputStream);
             CloseUtils.closeQuietly(outputStream);
         }
-        return null;
+        return response;
 
     }
 
@@ -139,7 +155,7 @@ public class HttpUrlConn implements XNetworkConnection {
         } else if (request.method() == "get") {
             newRequest = newRequestBuilder.url(nextUrl).buildGetRequest();
         }
-        connection = createUrlConnection(client, newRequest);
+        HttpURLConnection connection = createUrlConnection(config, newRequest);
         setRequestHeaders(connection, request);
         setRequestParams(connection, request);
         return fetchResponse(connection);
