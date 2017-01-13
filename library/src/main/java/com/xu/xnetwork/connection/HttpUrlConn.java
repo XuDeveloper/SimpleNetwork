@@ -1,5 +1,7 @@
 package com.xu.xnetwork.connection;
 
+import android.util.Log;
+
 import com.xu.xnetwork.call.XNetworkCall;
 import com.xu.xnetwork.config.XNetworkConfig;
 import com.xu.xnetwork.request.Request;
@@ -37,7 +39,8 @@ public class HttpUrlConn implements XNetworkConnection {
 
         try {
             if (isUseCache(config, request)) {
-                return (Response) config.cache().get(request.url());
+                Log.i("http", "use-cache");
+                response =  (Response) config.cache().get(request.url());
             } else {
                 connection = createUrlConnection(config, request);
                 setRequestHeaders(connection, request);
@@ -178,7 +181,7 @@ public class HttpUrlConn implements XNetworkConnection {
     }
 
     private boolean isUseCache(XNetworkConfig config, Request request) {
-        return request.isCache() && config.cache() != null && config.cache().get(request.url()) != null;
+        return request.isCache() && (config.cache() != null) && (config.cache().get(request.url()) != null);
     }
 
 }

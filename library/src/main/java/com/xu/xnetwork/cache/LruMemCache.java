@@ -1,6 +1,5 @@
 package com.xu.xnetwork.cache;
 
-import android.util.Log;
 import android.util.LruCache;
 
 import com.xu.xnetwork.response.Response;
@@ -25,17 +24,17 @@ public class LruMemCache implements Cache<String, Response> {
                 return value.body().contentLength() / 1024;
             }
         };
+
+
     }
 
     @Override
     public Response get(String key) {
-        Log.i("LruCache", "get:" + key);
         return lruCache.get(key);
     }
 
     @Override
     public void put(String key, Response response) {
-        Log.i("LruCache", "put: key:" + key + " value:" + response.toString());
         lruCache.put(key, response);
     }
 

@@ -41,8 +41,8 @@ public class MainActivity extends Activity {
         imageView = (ImageView) findViewById(R.id.image);
 //        RequestBody requestBody = new RequestBody.Builder().type(JSON).content("12333").build();
         client = XNetwork.defaultInit(MainActivity.this);
-        for (int i = 0; i < 40; i++) {
-            Request request = new Request.Builder().url("http://www.baidu.com").buildGetRequest();
+        for (int i = 0; i < 1; i++) {
+            Request request = new Request.Builder().url("http://www.baidu.com").isCache(true).buildGetRequest();
             client.newRequest(this, request, new XNetworkCallBack() {
                 @Override
                 public void onSuccess(Response response) {

@@ -31,6 +31,7 @@ public final class XNetworkConfig {
         this.readTimeout = builder.readTimeout;
         this.writeTimeout = builder.writeTimeout;
         this.mConnection = builder.connection;
+        this.cache = builder.cache;
     }
 
     public Context context() {
