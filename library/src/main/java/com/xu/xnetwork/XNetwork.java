@@ -2,6 +2,7 @@ package com.xu.xnetwork;
 
 import android.content.Context;
 
+import com.xu.xnetwork.cache.LruMemCache;
 import com.xu.xnetwork.config.XNetworkConfig;
 
 import java.util.concurrent.TimeUnit;
@@ -22,6 +23,7 @@ public class XNetwork {
                 .connectTimeout(5000, TimeUnit.MILLISECONDS)
                 .readTimeout(5000, TimeUnit.MILLISECONDS)
                 .writeTimeout(5000, TimeUnit.MILLISECONDS)
+                .cache(new LruMemCache())
                 .build();
         return new XNetworkClient(config);
     }

@@ -25,18 +25,30 @@ public class HttpUrlConn implements XNetworkConnection {
 
     private Request request;
     private XNetworkConfig config;
+    private HttpURLConnection connection;
+    private boolean interrupted;
 
     @Override
     public Response performCall(XNetworkCall call) {
-        HttpURLConnection connection = null;
+        connection = null;
         Response response = null;
         config = call.getConfig();
         request = call.getRequest();
+
         try {
-            connection = createUrlConnection(config, request);
-            setRequestHeaders(connection, request);
-            setRequestParams(connection, request);
-            response = fetchResponse(connection);
+            if (isUseCache(config, request)) {
+                return (Response) config.cache().get(request.url());
+            } else {
+                connection = createUrlConnection(config, request);
+                setRequestHeaders(connection, request);
+                setRequestParams(connection, request);
+                if (!interrupted) {
+                    response = fetchResponse(connection);
+                }
+                if (request.isCache()) {
+                    config.cache().put(request.url(), response);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -45,6 +57,14 @@ public class HttpUrlConn implements XNetworkConnection {
             }
         }
         return response;
+    }
+
+    @Override
+    public void disconnect() {
+        interrupted = true;
+        if (connection != null) {
+            connection.disconnect();
+        }
     }
 
     private HttpURLConnection createUrlConnection(XNetworkConfig config, Request request) throws IOException {
@@ -60,10 +80,6 @@ public class HttpUrlConn implements XNetworkConnection {
         for (String headerName : headersKeys) {
             connection.addRequestProperty(headerName, request.header().get(headerName));
         }
-        if (!headersKeys.contains("Connection")) {
-            connection.addRequestProperty("Connection", "Keep-Alive");
-        }
-
     }
 
     private void setRequestParams(HttpURLConnection connection, Request request)
@@ -150,15 +166,19 @@ public class HttpUrlConn implements XNetworkConnection {
         String nextUrl = original.header("Location");
         Request.Builder newRequestBuilder = request.newBuilder();
         Request newRequest = null;
-        if (request.method() == "post") {
+        if (request.method() == "POST") {
             newRequest = newRequestBuilder.url(nextUrl).buildPostRequest(request.body());
-        } else if (request.method() == "get") {
+        } else if (request.method() == "GET") {
             newRequest = newRequestBuilder.url(nextUrl).buildGetRequest();
         }
         HttpURLConnection connection = createUrlConnection(config, newRequest);
         setRequestHeaders(connection, request);
         setRequestParams(connection, request);
         return fetchResponse(connection);
+    }
+
+    private boolean isUseCache(XNetworkConfig config, Request request) {
+        return request.isCache() && config.cache() != null && config.cache().get(request.url()) != null;
     }
 
 }

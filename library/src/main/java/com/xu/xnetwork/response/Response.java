@@ -58,6 +58,10 @@ public final class Response {
         return BitmapFactory.decodeByteArray(body.bytes(), 0, body.bytes().length);
     }
 
+    public ResponseBody body() {
+        return body;
+    }
+
     public static class Builder {
         private String HTTPstatus;
         private int code;

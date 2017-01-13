@@ -37,4 +37,9 @@ public class XNetworkCall implements Runnable {
     public Request getRequest() {
         return request;
     }
+
+    public void disconnect() {
+        config.connection().disconnect();
+    }
+
 }

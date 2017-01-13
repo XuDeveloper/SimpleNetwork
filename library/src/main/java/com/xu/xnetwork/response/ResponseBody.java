@@ -19,6 +19,10 @@ public final class ResponseBody {
         return bytes;
     }
 
+    public int contentLength() {
+        return contentLength;
+    }
+
     public static class Builder {
         private byte[] bytes;
         private int contentLength;

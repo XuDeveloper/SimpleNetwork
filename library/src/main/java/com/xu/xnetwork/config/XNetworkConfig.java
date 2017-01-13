@@ -2,6 +2,7 @@ package com.xu.xnetwork.config;
 
 import android.content.Context;
 
+import com.xu.xnetwork.cache.Cache;
 import com.xu.xnetwork.connection.HttpUrlConn;
 import com.xu.xnetwork.connection.XNetworkConnection;
 
@@ -18,6 +19,7 @@ public final class XNetworkConfig {
     private int readTimeout;
     private int writeTimeout;
     private XNetworkConnection mConnection;
+    private Cache cache;
 
     private XNetworkConfig() {
 
@@ -51,12 +53,17 @@ public final class XNetworkConfig {
         return writeTimeout;
     }
 
+    public Cache cache() {
+        return cache;
+    }
+
     public static class Builder {
         private Context mContext;
         private int connectTimeout;
         private int readTimeout;
         private int writeTimeout;
         private XNetworkConnection connection;
+        private Cache cache;
 
         public Builder() {
             connectTimeout = 10_000;
@@ -109,6 +116,11 @@ public final class XNetworkConfig {
 
         public Builder connection(XNetworkConnection connection) {
             this.connection = connection;
+            return this;
+        }
+
+        public Builder cache(Cache cache) {
+            this.cache = cache;
             return this;
         }
 

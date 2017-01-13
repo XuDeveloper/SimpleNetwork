@@ -12,6 +12,7 @@ public final class Request {
     private final RequestBody body;
     private final boolean isAsync;
     private final int priority;
+    private final boolean isCache;
 //    private final Headers headers;
 //    private final RequestBody body;
 //    private final Object tag;
@@ -23,6 +24,7 @@ public final class Request {
         this.body = builder.body;
         this.isAsync = builder.isAsync;
         this.priority = builder.priority;
+        this.isCache = builder.isCache;
     }
 
     public Builder newBuilder() {
@@ -53,6 +55,10 @@ public final class Request {
         return isAsync;
     }
 
+    public boolean isCache() {
+        return isCache;
+    }
+
     @Override
     public String toString() {
         return "Request{method="
@@ -69,6 +75,7 @@ public final class Request {
         private RequestBody body;
         private boolean isAsync;
         private int priority;
+        private boolean isCache;
 
         public Builder() {
             this.headers = new Header.Builder();
@@ -81,6 +88,7 @@ public final class Request {
             this.body = request.body;
 //            this.tag = request.tag;
             this.priority = request.priority;
+            this.isCache = false;
         }
 
         public Builder url(String url) {
@@ -115,6 +123,11 @@ public final class Request {
         public Builder method(String method) {
             if (method == null) throw new NullPointerException("method == null");
             this.method = method;
+            return this;
+        }
+
+        public Builder isCache(boolean isCache) {
+            this.isCache = isCache;
             return this;
         }
 

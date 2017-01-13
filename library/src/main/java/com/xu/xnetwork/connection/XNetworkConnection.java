@@ -10,4 +10,6 @@ import com.xu.xnetwork.response.Response;
 public interface XNetworkConnection {
 
     Response performCall(XNetworkCall call);
+
+    void disconnect();
 }
